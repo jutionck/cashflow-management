@@ -1,10 +1,27 @@
-# 💰 Sistem Manajemen Arus Kas
+# 💰 Manajemen Uang Pribadi
 
 Aplikasi manajemen keuangan pribadi yang komprehensif dibangun dengan **Next.js 15**, **TypeScript**, dan **Tailwind CSS**. Kelola pendapatan, pengeluaran, anggaran, dan tujuan keuangan Anda dalam satu tempat.
 
 ![Cashflow Management](https://img.shields.io/badge/Next.js-15.2.4-blue?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-blue?style=flat-square&logo=tailwindcss)
+
+## 📸 Screenshot Aplikasi
+
+<!-- Tambahkan screenshot aplikasi Anda di sini -->
+
+![Dashboard Utama](screenshots/dashboard.png)
+_Dashboard utama aplikasi Manajemen Uang Pribadi_
+
+### Fitur Utama dalam Gambar
+
+| Dashboard                               | Transaksi                                  | Anggaran                            |
+| --------------------------------------- | ------------------------------------------ | ----------------------------------- |
+| ![Dashboard](screenshots/dashboard.png) | ![Transaksi](screenshots/transactions.png) | ![Anggaran](screenshots/budget.png) |
+
+| Tujuan Keuangan                  | Analitik                               | Import/Export                                   |
+| -------------------------------- | -------------------------------------- | ----------------------------------------------- |
+| ![Tujuan](screenshots/goals.png) | ![Analitik](screenshots/analytics.png) | ![Import Export](screenshots/import-export.png) |
 
 ## 🚀 Fitur
 
@@ -262,6 +279,34 @@ Jika Anda memiliki pertanyaan atau memerlukan bantuan:
 - [Radix UI](https://www.radix-ui.com/) - UI primitives
 - [Recharts](https://recharts.org/) - Chart library
 - [Lucide](https://lucide.dev/) - Icon library
+
+## 📷 Cara Menambahkan Screenshot
+
+Untuk menambahkan screenshot ke README ini:
+
+1. **Buat folder screenshots** di root project:
+
+   ```bash
+   mkdir screenshots
+   ```
+
+2. **Ambil screenshot** dari aplikasi yang sedang berjalan:
+
+   - Jalankan aplikasi dengan `pnpm dev`
+   - Buka http://localhost:3000 di browser
+   - Ambil screenshot untuk setiap fitur:
+     - `dashboard.png` - Halaman utama dengan ringkasan
+     - `transactions.png` - Tab transaksi dengan daftar
+     - `budget.png` - Tab anggaran dengan progress
+     - `goals.png` - Tab tujuan keuangan
+     - `analytics.png` - Tab analitik dengan grafik
+     - `import-export.png` - Tab import/export
+
+3. **Simpan screenshot** dengan resolusi optimal (1200x800px atau lebih)
+
+4. **Pastikan file screenshot** tersimpan di folder `screenshots/`
+
+5. **Commit dan push** perubahan ke repository
 
 ---
 

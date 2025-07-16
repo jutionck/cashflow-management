@@ -77,6 +77,15 @@ export default function CashflowChart({
     });
   }, [transactions]);
 
+  const generateColor = (category: string) => {
+    let hash = 0;
+    for (let i = 0; i < category.length; i++) {
+      hash = category.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash % 360);
+    return `hsl(${hue}, 70%, 50%)`;
+  };
+
   const categoryData = useMemo(() => {
     const expensesByCategory = transactions
       .filter((t) => t.type === 'expense')
@@ -88,7 +97,7 @@ export default function CashflowChart({
     return Object.entries(expensesByCategory).map(([category, amount]) => ({
       category,
       amount,
-      fill: `hsl(${Math.random() * 360}, 70%, 50%)`,
+      fill: generateColor(category),
     }));
   }, [transactions]);
 

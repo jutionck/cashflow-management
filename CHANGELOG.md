@@ -7,12 +7,97 @@ dan proyek ini mengikuti [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-07-16
+
+### 🎯 BREAKING CHANGES - One Device, One User Model
+
 ### Ditambahkan
 
-- Dokumentasi README yang komprehensif
-- Panduan kontribusi
-- Lisensi MIT
-- Changelog proyek
+- 👤 **Arsitektur One Device, One User**
+
+  - Model pengguna yang disederhanakan: satu pengguna aktif per perangkat
+  - Manajemen sesi pengguna yang lebih mudah dan aman
+  - Interface yang dibersihkan tanpa kompleksitas switching pengguna
+  - Isolasi data otomatis per pengguna dengan storage keys
+
+- 🔧 **SSR-Safe LocalStorage Hooks**
+
+  - Hook `useLocalStorageSSR` custom untuk mencegah hydration mismatch
+  - State loading non-blocking yang tidak menghalangi interaksi UI
+  - Pattern useRef untuk dependencies yang stabil
+  - Type safety penuh dengan TypeScript generics
+
+- 🎛️ **Manajemen Pengguna yang Disederhanakan**
+
+  - Komponen user management yang diperbaharui
+  - Fungsionalitas logout yang bersih
+  - Opsi "Hapus & Reset Data" untuk memulai fresh
+  - Welcome screen yang user-friendly untuk pengguna baru
+
+- 📊 **Peningkatan Loading States**
+  - Loading states yang tidak memblokir UI
+  - Dashboard langsung muncul dengan data kosong
+  - Progressive data loading untuk user experience yang lebih baik
+  - Proper loading indicators di semua komponen
+
+### Diperbaiki
+
+- 🚫 **Hydration Errors**
+
+  - Resolved React hydration mismatches antara server dan client
+  - SSR-safe localStorage access dengan proper client-side checks
+  - Stable rendering antara server dan client
+  - Eliminasi "Text content does not match" errors
+
+- 🔄 **Infinite Re-render Loops**
+
+  - Fixed "Maximum update depth exceeded" errors
+  - Stable dependencies menggunakan useRef pattern
+  - Proper effect cleanup dan dependency management
+  - Optimized re-rendering performance
+
+- ⏳ **User Creation Flow Issues**
+  - Resolved stuck loading screens saat membuat pengguna baru
+  - Immediate navigation ke dashboard setelah user creation
+  - Simplified loading logic yang prioritaskan user experience
+  - Eliminated refresh requirements untuk akses dashboard
+
+### Dihapus
+
+- ❌ **Multi-User Support**
+
+  - Dihapus kemampuan untuk switch antara multiple users
+  - User list management tidak lagi diperlukan
+  - Simplified interface tanpa user switching complexity
+  - Fokus pada single user experience yang optimal
+
+- 🗂️ **Complex User Management**
+  - Dihapus dropdown user selection
+  - Simplified user creation process
+  - Removed user switching dialogs
+  - Streamlined user management UI
+
+### Teknis
+
+- 🏗️ **Arsitektur yang Diperbaiki**
+
+  - Hook-based state management yang lebih robust
+  - Separation of concerns yang lebih baik
+  - Component isolation dan modularity
+  - Predictable state management
+
+- 📈 **Performance Optimizations**
+
+  - Reduced localStorage operations
+  - Memoized expensive calculations
+  - Stable component references
+  - Optimized rendering cycles
+
+- 📚 **Dokumentasi Lengkap**
+  - README yang completely rewritten
+  - TECHNICAL.md untuk developer documentation
+  - Architecture overview dan implementation details
+  - Troubleshooting guide dan best practices
 
 ## [0.2.0] - 2025-07-15
 

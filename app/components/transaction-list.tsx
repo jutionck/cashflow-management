@@ -93,9 +93,21 @@ export default function TransactionList({
       <CardContent>
         <div className='space-y-4'>
           {filteredTransactions.length === 0 ? (
-            <p className='text-center text-muted-foreground py-8'>
-              Tidak ada transaksi ditemukan
-            </p>
+            <div className='text-center py-12'>
+              <div className='mx-auto mb-4 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center'>
+                <Search className='h-6 w-6 text-primary' />
+              </div>
+              <h3 className='text-lg font-semibold mb-2'>
+                {transactions.length === 0
+                  ? 'Belum Ada Transaksi'
+                  : 'Tidak Ada Hasil'}
+              </h3>
+              <p className='text-muted-foreground'>
+                {transactions.length === 0
+                  ? 'Mulai dengan menambah transaksi pertama Anda.'
+                  : 'Coba ubah filter atau kata kunci pencarian.'}
+              </p>
+            </div>
           ) : (
             filteredTransactions.map((transaction) => (
               <div

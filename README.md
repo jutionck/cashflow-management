@@ -1,10 +1,21 @@
 # 💰 Manajemen Uang Pribadi
 
-Aplikasi manajemen keuangan pribadi yang komprehensif dibangun dengan **Next.js 15**, **TypeScript**, dan **Tailwind CSS**. Kelola pendapatan, pengeluaran, anggaran, dan tujuan keuangan Anda dalam satu tempat.
+Aplikasi manajemen keuangan pribadi yang komprehensif dibangun dengan **Next.js 15**, **TypeScript**, dan **Tailwind CSS**. Kelola pendapatan, pengeluaran, anggaran, dan tujuan keuangan Anda dalam satu tempat dengan model **satu perangkat, satu pengguna**.
 
 ![Cashflow Management](https://img.shields.io/badge/Next.js-15.2.4-blue?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-blue?style=flat-square&logo=tailwindcss)
+![User Model](https://img.shields.io/badge/User%20Model-One%20Device%2C%20One%20User-green?style=flat-square)
+
+## 🔐 Model Pengguna
+
+Aplikasi ini menggunakan **model satu perangkat, satu pengguna** untuk kesederhanaan dan keamanan:
+
+- ✅ **Satu Pengguna Aktif**: Hanya satu pengguna yang dapat aktif per perangkat
+- ✅ **Data Terisolasi**: Setiap pengguna memiliki data yang terpisah dan aman
+- ✅ **Logout Sederhana**: Tombol logout untuk mengakhiri sesi dan membersihkan data
+- ✅ **Reset Data**: Opsi untuk menghapus semua data dan memulai dari awal
+- ✅ **Tidak Ada Switching**: Menghilangkan kompleksitas perpindahan antar pengguna
 
 ## 📸 Screenshot Aplikasi
 
@@ -25,7 +36,15 @@ _Dashboard utama aplikasi Manajemen Uang Pribadi_
 
 ## 🚀 Fitur
 
-### 📊 Manajemen Transaksi
+### � Manajemen Pengguna (One Device, One User)
+
+- ✅ **Pengguna Tunggal** - Satu pengguna aktif per perangkat untuk kesederhanaan
+- ✅ **Onboarding Sederhana** - Proses pembuatan pengguna yang mudah
+- ✅ **Data Terisolasi** - Setiap pengguna memiliki storage data yang terpisah
+- ✅ **Logout & Reset** - Opsi untuk mengakhiri sesi atau reset seluruh data
+- ✅ **Auto-Save** - Data tersimpan otomatis di localStorage browser
+
+### �📊 Manajemen Transaksi
 
 - ✅ **Tambah, Edit, Hapus Transaksi** - Operasi CRUD lengkap untuk transaksi keuangan
 - ✅ **Transaksi Berulang** - Atur pendapatan/pengeluaran berulang mingguan, bulanan, atau tahunan
@@ -66,10 +85,12 @@ _Dashboard utama aplikasi Manajemen Uang Pribadi_
 - **Framework Frontend**: Next.js 15.2.4
 - **Bahasa**: TypeScript
 - **Styling**: Tailwind CSS
-- **Komponen UI**: Radix UI primitives
+- **Komponen UI**: Radix UI primitives + shadcn/ui
 - **Grafik**: Recharts
 - **Penanganan Tanggal**: date-fns
 - **Ikon**: Lucide React
+- **Storage**: Browser localStorage (SSR-safe)
+- **State Management**: React hooks dengan custom localStorage hooks
 - **Development**: ESLint, Prettier
 
 ## 📁 Struktur Proyek
@@ -83,7 +104,11 @@ cashflow-management/
 │   │   ├── cashflow-chart.tsx        # Visualisasi grafik
 │   │   ├── budget-management.tsx     # Pengaturan dan pelacakan anggaran
 │   │   ├── financial-goals.tsx       # Manajemen tujuan keuangan
-│   │   └── import-export.tsx         # Fungsi import/export data
+│   │   ├── import-export.tsx         # Fungsi import/export data
+│   │   └── user-management.tsx       # Manajemen pengguna (one device, one user)
+│   ├── hooks/
+│   │   ├── use-local-storage-ssr.ts  # Hook localStorage yang SSR-safe
+│   │   └── use-user-storage.ts       # Hook manajemen pengguna
 │   ├── types/
 │   │   └── transaction.ts            # Definisi tipe TypeScript
 │   ├── utils/
@@ -92,9 +117,9 @@ cashflow-management/
 │   ├── layout.tsx                    # Layout aplikasi
 │   └── page.tsx                      # Komponen halaman utama
 ├── components/
-│   ├── ui/                          # Komponen UI yang dapat digunakan kembali
+│   ├── ui/                          # Komponen UI shadcn/ui
 │   └── theme-provider.tsx           # Konfigurasi tema
-├── hooks/                           # Custom React hooks
+├── hooks/                           # Additional custom React hooks
 ├── lib/                            # Library utilitas
 └── public/                         # Aset statis
 ```
@@ -144,8 +169,69 @@ cashflow-management/
 - `npm run build` - Build aplikasi production
 - `npm run start` - Jalankan production server
 - `npm run lint` - Jalankan ESLint untuk kualitas kode
+- `npx tsc --noEmit` - Type checking tanpa output files
+
+### Environment Variables
+
+Aplikasi ini tidak memerlukan environment variables khusus karena menggunakan localStorage browser. Namun untuk production, pertimbangkan:
+
+```env
+# Optional: Analytics atau monitoring
+NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
+
+# Optional: Error reporting
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+```
+
+### Deployment
+
+**Vercel (Recommended):**
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+**Netlify:**
+
+```bash
+# Build command: npm run build
+# Publish directory: .next
+```
+
+**Docker:**
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+```
 
 ## 📱 Panduan Penggunaan
+
+### 0. Memulai dengan Pengguna Baru
+
+**Pertama Kali Menggunakan Aplikasi:**
+
+1. Buka aplikasi di browser
+2. Anda akan melihat layar selamat datang
+3. Masukkan nama Anda di field "Nama Pengguna"
+4. Klik "Buat Pengguna" untuk memulai
+5. Dashboard akan langsung terbuka dengan data kosong
+
+**Mengelola Sesi Pengguna:**
+
+- **Logout**: Klik tombol "Keluar" di kanan atas untuk mengakhiri sesi
+- **Hapus & Reset**: Di menu pengguna, pilih "Hapus & Reset Data" untuk menghapus semua data dan memulai fresh
+- **One Device, One User**: Hanya satu pengguna yang dapat aktif pada satu waktu
 
 ### 1. Mengelola Transaksi
 
@@ -220,7 +306,48 @@ cashflow-management/
 4. Tinjau preview import
 5. Konfirmasi untuk mengimpor semua transaksi yang valid
 
-## 🎨 Kustomisasi
+## �️ Arsitektur Teknis
+
+### SSR-Safe Storage System
+
+Aplikasi ini menggunakan sistem storage yang aman untuk Server-Side Rendering (SSR):
+
+```typescript
+// useLocalStorageSSR Hook
+// Mencegah hydration mismatch antara server dan client
+const [data, setData, isLoaded] = useLocalStorageSSR<Type>('key', defaultValue);
+```
+
+**Fitur Kunci:**
+
+- ✅ **Hydration Safety**: Tidak ada mismatch antara server dan client rendering
+- ✅ **Loading States**: State `isLoaded` untuk menangani loading UI
+- ✅ **Type Safety**: Full TypeScript support dengan generics
+- ✅ **Stable Dependencies**: useRef pattern untuk mencegah infinite loops
+
+### User Storage Architecture
+
+```typescript
+// useUserStorage Hook
+// Manajemen pengguna dengan isolasi data
+const {
+  currentUser, // User yang sedang aktif
+  createUser, // Membuat pengguna baru
+  deleteUser, // Hapus pengguna dan data (reset)
+  logoutUser, // Logout tanpa hapus data
+  getUserStorageKey, // Generate storage key per user
+} = useUserStorage();
+```
+
+### Component Architecture
+
+- **Page Component**: Main dashboard dengan state management
+- **User Management**: Handle user lifecycle dan UI
+- **Transaction Components**: CRUD operations untuk transaksi
+- **Chart Components**: Visualisasi data dengan Recharts
+- **Form Components**: Forms dengan validation
+
+## 🔧 Kustomisasi
 
 ### Menambah Kategori Baru
 
@@ -264,7 +391,52 @@ Proyek ini menggunakan konfigurasi Tailwind khusus. Modifikasi `tailwind.config.
 - Tipografi
 - Breakpoint
 
-## 📞 Dukungan
+## � Troubleshooting
+
+### Masalah Umum
+
+**1. Data Hilang Setelah Refresh**
+
+```bash
+# Periksa apakah localStorage browser tersedia
+# Pastikan tidak dalam mode private browsing
+# Cek console browser untuk error
+```
+
+**2. Hydration Errors**
+
+```bash
+# Jalankan type checking
+npx tsc --noEmit
+
+# Restart development server
+npm run dev
+```
+
+**3. Build Errors**
+
+```bash
+# Clear cache dan reinstall
+rm -rf .next node_modules package-lock.json
+npm install
+npm run build
+```
+
+**4. Performance Issues**
+
+- Batasi jumlah transaksi yang ditampilkan sekaligus
+- Gunakan pagination untuk dataset besar
+- Pertimbangkan export/import untuk data lama
+
+### Browser Compatibility
+
+- ✅ Chrome 90+
+- ✅ Firefox 90+
+- ✅ Safari 14+
+- ✅ Edge 90+
+- ❌ Internet Explorer (tidak didukung)
+
+## �📞 Dukungan
 
 Jika Anda memiliki pertanyaan atau memerlukan bantuan:
 
@@ -277,8 +449,33 @@ Jika Anda memiliki pertanyaan atau memerlukan bantuan:
 - [Next.js](https://nextjs.org/) - React framework
 - [Tailwind CSS](https://tailwindcss.com/) - CSS framework
 - [Radix UI](https://www.radix-ui.com/) - UI primitives
+- [shadcn/ui](https://ui.shadcn.com/) - UI component library
 - [Recharts](https://recharts.org/) - Chart library
 - [Lucide](https://lucide.dev/) - Icon library
+- [date-fns](https://date-fns.org/) - Date utility library
+
+## 📝 Changelog
+
+### v2.0.0 - One Device, One User Model
+
+- ✅ Implemented one device, one user architecture
+- ✅ Added SSR-safe localStorage hooks
+- ✅ Simplified user management interface
+- ✅ Added logout and data reset functionality
+- ✅ Fixed hydration issues and infinite re-render loops
+- ✅ Improved user experience with non-blocking loading states
+
+### v1.0.0 - Initial Release
+
+- ✅ Basic transaction management
+- ✅ Budget tracking
+- ✅ Financial goals
+- ✅ Analytics dashboard
+- ✅ Import/export functionality
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📷 Cara Menambahkan Screenshot
 

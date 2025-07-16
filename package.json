@@ -1,6 +1,16 @@
 {
   "name": "cashflow-management",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Personal finance management application with one device, one user model",
+  "keywords": [
+    "finance",
+    "budgeting",
+    "personal-finance",
+    "cashflow",
+    "nextjs",
+    "typescript",
+    "tailwindcss"
+  ],
   "private": true,
   "scripts": {
     "build": "next build",

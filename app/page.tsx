@@ -41,66 +41,23 @@ import CashflowChart from './components/cashflow-chart';
 import BudgetManagement from './components/budget-management';
 import FinancialGoals from './components/financial-goals';
 import ImportExport from './components/import-export';
+import UserManagement from './components/user-management';
 import type { Transaction } from './types/transaction';
 import { formatIDR } from './utils/currency';
-import { useLocalStorage, storageKeys } from './hooks/use-local-storage';
-
-const initialTransactions: Transaction[] = [
-  {
-    id: '1',
-    date: '2024-01-15',
-    description: 'Gaji Bulanan',
-    amount: 15000000,
-    type: 'income',
-    category: 'Salary',
-  },
-  {
-    id: '2',
-    date: '2024-01-16',
-    description: 'Sewa Rumah',
-    amount: 3500000,
-    type: 'expense',
-    category: 'Housing',
-  },
-  {
-    id: '3',
-    date: '2024-01-18',
-    description: 'Belanja Groceries',
-    amount: 450000,
-    type: 'expense',
-    category: 'Food',
-  },
-  {
-    id: '4',
-    date: '2024-01-20',
-    description: 'Proyek Freelance',
-    amount: 2400000,
-    type: 'income',
-    category: 'Freelance',
-  },
-  {
-    id: '5',
-    date: '2024-01-22',
-    description: 'Listrik & Air',
-    amount: 600000,
-    type: 'expense',
-    category: 'Utilities',
-  },
-  {
-    id: '6',
-    date: '2024-01-25',
-    description: 'Dividen Investasi',
-    amount: 900000,
-    type: 'income',
-    category: 'Investment',
-  },
-];
+import { storageKeys } from './hooks/use-local-storage';
+import { useLocalStorageSSR } from './hooks/use-local-storage-ssr';
+import { useUserStorage } from './hooks/use-user-storage';
 
 export default function CashflowManager() {
-  const [transactions, setTransactions] = useLocalStorage<Transaction[]>(
-    storageKeys.TRANSACTIONS,
-    initialTransactions
-  );
+  const { currentUser, getUserStorageKey, isCurrentUserLoaded } =
+    useUserStorage();
+
+  const transactionStorageKey = currentUser
+    ? `${storageKeys.TRANSACTIONS}_${currentUser.id}`
+    : storageKeys.TRANSACTIONS;
+
+  const [transactions, setTransactions, isTransactionsLoaded] =
+    useLocalStorageSSR<Transaction[]>(transactionStorageKey, []);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: startOfMonth(new Date()),
@@ -112,6 +69,15 @@ export default function CashflowManager() {
   >(undefined);
 
   const monthlyData = useMemo(() => {
+    if (!isTransactionsLoaded) {
+      return {
+        income: 0,
+        expenses: 0,
+        netCashflow: 0,
+        transactions: [] as Transaction[],
+      };
+    }
+
     const filteredTransactions = transactions.filter((transaction) =>
       isWithinInterval(parseISO(transaction.date), {
         start: dateRange.from,
@@ -135,7 +101,7 @@ export default function CashflowManager() {
       netCashflow,
       transactions: filteredTransactions,
     };
-  }, [transactions, dateRange]);
+  }, [transactions, dateRange, isTransactionsLoaded]);
 
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
     if (editingTransaction) {
@@ -193,22 +159,42 @@ export default function CashflowManager() {
     window.URL.revokeObjectURL(url);
   };
 
+  if (!isCurrentUserLoaded) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4'></div>
+          <p>Memuat data pengguna...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <UserManagement />;
+  }
+
   return (
     <div className='min-h-screen bg-background'>
       <div className='container mx-auto p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6'>
         <div className='flex flex-col gap-4'>
           <div className='text-center md:text-left'>
-            <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold flex items-center justify-center md:justify-start gap-2'>
-              <Wallet className='h-6 w-6 md:h-8 md:w-8' />
-              Manajemen Uang Pribadi
-            </h1>
-            <p className='text-muted-foreground flex items-center justify-center md:justify-start gap-2 text-sm md:text-base'>
-              Lacak pemasukan dan pengeluaran Anda
-              <Badge variant='secondary' className='text-xs'>
-                <Database className='h-3 w-3 mr-1' />
-                Simpan Otomatis
-              </Badge>
-            </p>
+            <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
+              <div>
+                <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold flex items-center justify-center md:justify-start gap-2'>
+                  <Wallet className='h-6 w-6 md:h-8 md:w-8' />
+                  Manajemen Uang Pribadi
+                </h1>
+                <div className='text-muted-foreground flex items-center justify-center md:justify-start gap-2 text-sm md:text-base'>
+                  Lacak pemasukan dan pengeluaran Anda
+                  <Badge variant='secondary' className='text-xs'>
+                    <Database className='h-3 w-3 mr-1' />
+                    Simpan Otomatis
+                  </Badge>
+                </div>
+              </div>
+              <UserManagement />
+            </div>
           </div>
 
           <div className='flex flex-col md:flex-row gap-2 md:gap-4 w-full'>
@@ -382,61 +368,87 @@ export default function CashflowManager() {
               <Card>
                 <CardHeader className='pb-3'>
                   <CardTitle className='text-base md:text-lg lg:text-xl'>
-                    Transaksi Terbaru
+                    {monthlyData.transactions.length === 0
+                      ? 'Mulai Transaksi'
+                      : 'Transaksi Terbaru'}
                   </CardTitle>
                   <CardDescription className='text-sm'>
-                    5 transaksi terakhir
+                    {monthlyData.transactions.length === 0
+                      ? 'Belum ada transaksi untuk bulan ini'
+                      : '5 transaksi terakhir'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className='p-3 md:p-4 lg:p-6'>
                   <div className='space-y-3'>
-                    {monthlyData.transactions
-                      .sort(
-                        (a, b) =>
-                          new Date(b.date).getTime() -
-                          new Date(a.date).getTime()
-                      )
-                      .slice(0, 5)
-                      .map((transaction) => (
-                        <div
-                          key={transaction.id}
-                          className='flex flex-col md:flex-row md:items-center justify-between gap-2 p-3 border rounded-lg'
-                        >
-                          <div className='flex-1'>
-                            <p className='font-medium text-sm md:text-base'>
-                              {transaction.description}
-                            </p>
-                            <p className='text-xs md:text-sm text-muted-foreground'>
-                              {transaction.category} •{' '}
-                              {format(parseISO(transaction.date), 'MMM dd')}
-                            </p>
-                          </div>
-                          <div className='text-left md:text-right'>
-                            <p
-                              className={`font-medium text-sm md:text-base ${
-                                transaction.type === 'income'
-                                  ? 'text-green-600'
-                                  : 'text-red-600'
-                              }`}
-                            >
-                              {transaction.type === 'income' ? '+' : '-'}
-                              {formatIDR(transaction.amount)}
-                            </p>
-                            <Badge
-                              variant={
-                                transaction.type === 'income'
-                                  ? 'default'
-                                  : 'secondary'
-                              }
-                              className='text-xs'
-                            >
-                              {transaction.type === 'income'
-                                ? 'Pemasukan'
-                                : 'Pengeluaran'}
-                            </Badge>
-                          </div>
+                    {monthlyData.transactions.length === 0 ? (
+                      <div className='text-center py-8'>
+                        <div className='mx-auto mb-4 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center'>
+                          <Plus className='h-6 w-6 text-primary' />
                         </div>
-                      ))}
+                        <h3 className='text-lg font-semibold mb-2'>
+                          Selamat Datang, {currentUser?.name}!
+                        </h3>
+                        <p className='text-muted-foreground mb-4'>
+                          Belum ada transaksi. Mulai dengan menambah transaksi
+                          pertama Anda.
+                        </p>
+                        <Button
+                          onClick={() => setShowTransactionForm(true)}
+                          className='mx-auto'
+                        >
+                          <Plus className='mr-2 h-4 w-4' />
+                          Tambah Transaksi Pertama
+                        </Button>
+                      </div>
+                    ) : (
+                      monthlyData.transactions
+                        .sort(
+                          (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        )
+                        .slice(0, 5)
+                        .map((transaction) => (
+                          <div
+                            key={transaction.id}
+                            className='flex flex-col md:flex-row md:items-center justify-between gap-2 p-3 border rounded-lg'
+                          >
+                            <div className='flex-1'>
+                              <p className='font-medium text-sm md:text-base'>
+                                {transaction.description}
+                              </p>
+                              <p className='text-xs md:text-sm text-muted-foreground'>
+                                {transaction.category} •{' '}
+                                {format(parseISO(transaction.date), 'MMM dd')}
+                              </p>
+                            </div>
+                            <div className='text-left md:text-right'>
+                              <p
+                                className={`font-medium text-sm md:text-base ${
+                                  transaction.type === 'income'
+                                    ? 'text-green-600'
+                                    : 'text-red-600'
+                                }`}
+                              >
+                                {transaction.type === 'income' ? '+' : '-'}
+                                {formatIDR(transaction.amount)}
+                              </p>
+                              <Badge
+                                variant={
+                                  transaction.type === 'income'
+                                    ? 'default'
+                                    : 'secondary'
+                                }
+                                className='text-xs'
+                              >
+                                {transaction.type === 'income'
+                                  ? 'Pemasukan'
+                                  : 'Pengeluaran'}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -455,11 +467,23 @@ export default function CashflowManager() {
             <BudgetManagement
               transactions={transactions}
               currentMonth={selectedDate}
+              storageKey={
+                currentUser
+                  ? `${storageKeys.BUDGETS}_${currentUser.id}`
+                  : storageKeys.BUDGETS
+              }
             />
           </TabsContent>
 
           <TabsContent value='goals'>
-            <FinancialGoals totalBalance={monthlyData.netCashflow} />
+            <FinancialGoals
+              totalBalance={monthlyData.netCashflow}
+              storageKey={
+                currentUser
+                  ? `${storageKeys.FINANCIAL_GOALS}_${currentUser.id}`
+                  : storageKeys.FINANCIAL_GOALS
+              }
+            />
           </TabsContent>
 
           <TabsContent value='analytics' className='space-y-4'>

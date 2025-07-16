@@ -34,6 +34,7 @@ import { useLocalStorage, storageKeys } from '../hooks/use-local-storage';
 interface BudgetManagementProps {
   transactions: Transaction[];
   currentMonth: Date;
+  storageKey?: string;
 }
 
 const expenseCategories = [
@@ -50,11 +51,9 @@ const expenseCategories = [
 export default function BudgetManagement({
   transactions,
   currentMonth,
+  storageKey = storageKeys.BUDGETS,
 }: BudgetManagementProps) {
-  const [budgets, setBudgets] = useLocalStorage<Budget[]>(
-    storageKeys.BUDGETS,
-    []
-  );
+  const [budgets, setBudgets] = useLocalStorage<Budget[]>(storageKey, []);
   const [showBudgetForm, setShowBudgetForm] = useState(false);
   const [newBudget, setNewBudget] = useState({
     category: '',

@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Manajemen Uang Pribadi',
   description: 'Dibuat dengan ❤️ oleh Jution Candra Kirana',
   viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

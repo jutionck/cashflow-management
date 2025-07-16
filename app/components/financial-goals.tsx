@@ -33,6 +33,7 @@ import { useLocalStorage, storageKeys } from '../hooks/use-local-storage';
 
 interface FinancialGoalsProps {
   totalBalance: number;
+  storageKey?: string;
 }
 
 const goalCategories = [
@@ -46,7 +47,10 @@ const goalCategories = [
   'Other',
 ];
 
-export default function FinancialGoals({ totalBalance }: FinancialGoalsProps) {
+export default function FinancialGoals({
+  totalBalance,
+  storageKey = storageKeys.FINANCIAL_GOALS,
+}: FinancialGoalsProps) {
   const initialGoals: FinancialGoal[] = [
     {
       id: '1',
@@ -69,7 +73,7 @@ export default function FinancialGoals({ totalBalance }: FinancialGoalsProps) {
   ];
 
   const [goals, setGoals] = useLocalStorage<FinancialGoal[]>(
-    storageKeys.FINANCIAL_GOALS,
+    storageKey,
     initialGoals
   );
 

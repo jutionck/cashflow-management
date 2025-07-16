@@ -4,6 +4,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Manajemen Uang Pribadi',
   description: 'Dibuat dengan ❤️ oleh Jution Candra Kirana',
+  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -12,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body>{children}</body>
+    <html lang='id'>
+      <body className='antialiased'>{children}</body>
     </html>
   );
 }

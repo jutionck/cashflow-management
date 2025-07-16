@@ -195,14 +195,14 @@ export default function CashflowManager() {
 
   return (
     <div className='min-h-screen bg-background'>
-      <div className='container mx-auto p-6 space-y-6'>
-        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
-          <div>
-            <h1 className='text-3xl font-bold flex items-center gap-2'>
-              <Wallet className='h-8 w-8' />
+      <div className='container mx-auto p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6'>
+        <div className='flex flex-col gap-4'>
+          <div className='text-center md:text-left'>
+            <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold flex items-center justify-center md:justify-start gap-2'>
+              <Wallet className='h-6 w-6 md:h-8 md:w-8' />
               Manajemen Uang Pribadi
             </h1>
-            <p className='text-muted-foreground flex items-center gap-2'>
+            <p className='text-muted-foreground flex items-center justify-center md:justify-start gap-2 text-sm md:text-base'>
               Lacak pemasukan dan pengeluaran Anda
               <Badge variant='secondary' className='text-xs'>
                 <Database className='h-3 w-3 mr-1' />
@@ -211,18 +211,18 @@ export default function CashflowManager() {
             </p>
           </div>
 
-          <div className='flex flex-col sm:flex-row gap-2'>
+          <div className='flex flex-col md:flex-row gap-2 md:gap-4 w-full'>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant='outline'
-                  className='justify-start text-left font-normal bg-transparent'
+                  className='justify-start text-left font-normal bg-transparent w-full md:w-auto'
                 >
                   <CalendarIcon className='mr-2 h-4 w-4' />
                   {format(dateRange.from, 'MMM yyyy')}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className='w-auto p-0' align='end'>
+              <PopoverContent className='w-auto p-0' align='center'>
                 <Calendar
                   mode='single'
                   selected={selectedDate}
@@ -240,19 +240,28 @@ export default function CashflowManager() {
               </PopoverContent>
             </Popover>
 
-            <Button onClick={downloadReport} variant='outline'>
+            <Button
+              onClick={downloadReport}
+              variant='outline'
+              className='w-full md:w-auto'
+            >
               <Download className='mr-2 h-4 w-4' />
-              Unduh Laporan
+              <span className='hidden md:inline'>Unduh Laporan</span>
+              <span className='md:hidden'>Unduh</span>
             </Button>
 
-            <Button onClick={() => setShowTransactionForm(true)}>
+            <Button
+              onClick={() => setShowTransactionForm(true)}
+              className='w-full md:w-auto'
+            >
               <Plus className='mr-2 h-4 w-4' />
-              Tambah Transaksi
+              <span className='hidden md:inline'>Tambah Transaksi</span>
+              <span className='md:hidden'>Tambah</span>
             </Button>
           </div>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
@@ -261,7 +270,7 @@ export default function CashflowManager() {
               <TrendingUp className='h-4 w-4 text-green-600' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-bold text-green-600'>
+              <div className='text-lg md:text-xl lg:text-2xl font-bold text-green-600'>
                 {formatIDR(monthlyData.income)}
               </div>
               <p className='text-xs text-muted-foreground'>
@@ -278,7 +287,7 @@ export default function CashflowManager() {
               <TrendingDown className='h-4 w-4 text-red-600' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-bold text-red-600'>
+              <div className='text-lg md:text-xl lg:text-2xl font-bold text-red-600'>
                 {formatIDR(monthlyData.expenses)}
               </div>
               <p className='text-xs text-muted-foreground'>
@@ -296,7 +305,7 @@ export default function CashflowManager() {
             </CardHeader>
             <CardContent>
               <div
-                className={`text-2xl font-bold ${
+                className={`text-lg md:text-xl lg:text-2xl font-bold ${
                   monthlyData.netCashflow >= 0
                     ? 'text-green-600'
                     : 'text-red-600'
@@ -312,36 +321,74 @@ export default function CashflowManager() {
         </div>
 
         <Tabs defaultValue='overview' className='space-y-4'>
-          <TabsList className='grid w-full grid-cols-2 lg:grid-cols-6'>
-            <TabsTrigger value='overview'>Ringkasan</TabsTrigger>
-            <TabsTrigger value='transactions'>Transaksi</TabsTrigger>
-            <TabsTrigger value='budget'>Anggaran</TabsTrigger>
-            <TabsTrigger value='goals'>Tujuan</TabsTrigger>
-            <TabsTrigger value='analytics'>Analitik</TabsTrigger>
-            <TabsTrigger value='import-export'>Impor/Ekspor</TabsTrigger>
-          </TabsList>
+          <div className='overflow-x-auto'>
+            <TabsList className='grid w-full grid-cols-6 min-w-[500px] md:min-w-0'>
+              <TabsTrigger
+                value='overview'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Ringkasan
+              </TabsTrigger>
+              <TabsTrigger
+                value='transactions'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Transaksi
+              </TabsTrigger>
+              <TabsTrigger
+                value='budget'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Anggaran
+              </TabsTrigger>
+              <TabsTrigger
+                value='goals'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Tujuan
+              </TabsTrigger>
+              <TabsTrigger
+                value='analytics'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Analitik
+              </TabsTrigger>
+              <TabsTrigger
+                value='import-export'
+                className='text-xs md:text-sm px-1 md:px-3 lg:px-4'
+              >
+                Impor/Ekspor
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value='overview' className='space-y-4'>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6'>
               <Card>
-                <CardHeader>
-                  <CardTitle>Arus Kas Bulanan</CardTitle>
-                  <CardDescription>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base md:text-lg lg:text-xl'>
+                    Arus Kas Bulanan
+                  </CardTitle>
+                  <CardDescription className='text-sm'>
                     Pemasukan vs Pengeluaran untuk{' '}
                     {format(dateRange.from, 'MMMM yyyy')}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='p-3 md:p-4 lg:p-6'>
                   <CashflowChart transactions={monthlyData.transactions} />
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle>Transaksi Terbaru</CardTitle>
-                  <CardDescription>5 transaksi terakhir</CardDescription>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base md:text-lg lg:text-xl'>
+                    Transaksi Terbaru
+                  </CardTitle>
+                  <CardDescription className='text-sm'>
+                    5 transaksi terakhir
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='p-3 md:p-4 lg:p-6'>
                   <div className='space-y-3'>
                     {monthlyData.transactions
                       .sort(
@@ -353,20 +400,20 @@ export default function CashflowManager() {
                       .map((transaction) => (
                         <div
                           key={transaction.id}
-                          className='flex items-center justify-between'
+                          className='flex flex-col md:flex-row md:items-center justify-between gap-2 p-3 border rounded-lg'
                         >
-                          <div>
-                            <p className='font-medium'>
+                          <div className='flex-1'>
+                            <p className='font-medium text-sm md:text-base'>
                               {transaction.description}
                             </p>
-                            <p className='text-sm text-muted-foreground'>
+                            <p className='text-xs md:text-sm text-muted-foreground'>
                               {transaction.category} •{' '}
                               {format(parseISO(transaction.date), 'MMM dd')}
                             </p>
                           </div>
-                          <div className='text-right'>
+                          <div className='text-left md:text-right'>
                             <p
-                              className={`font-medium ${
+                              className={`font-medium text-sm md:text-base ${
                                 transaction.type === 'income'
                                   ? 'text-green-600'
                                   : 'text-red-600'
@@ -416,27 +463,31 @@ export default function CashflowManager() {
           </TabsContent>
 
           <TabsContent value='analytics' className='space-y-4'>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6'>
               <Card>
-                <CardHeader>
-                  <CardTitle>Monthly Trend</CardTitle>
-                  <CardDescription>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base md:text-lg lg:text-xl'>
+                    Monthly Trend
+                  </CardTitle>
+                  <CardDescription className='text-sm'>
                     Cashflow trends over recent months
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='p-3 md:p-4 lg:p-6'>
                   <CashflowChart transactions={transactions} chartType='line' />
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle>Category Breakdown</CardTitle>
-                  <CardDescription>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base md:text-lg lg:text-xl'>
+                    Category Breakdown
+                  </CardTitle>
+                  <CardDescription className='text-sm'>
                     Expense distribution by category
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='p-3 md:p-4 lg:p-6'>
                   <CashflowChart
                     transactions={monthlyData.transactions}
                     chartType='pie'
@@ -445,16 +496,18 @@ export default function CashflowManager() {
               </Card>
 
               <Card className='lg:col-span-2'>
-                <CardHeader>
-                  <CardTitle>Financial Health Metrics</CardTitle>
-                  <CardDescription>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base md:text-lg lg:text-xl'>
+                    Financial Health Metrics
+                  </CardTitle>
+                  <CardDescription className='text-sm'>
                     Key indicators of your financial health
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                    <div className='text-center p-4 border rounded'>
-                      <div className='text-2xl font-bold text-blue-600'>
+                <CardContent className='p-3 md:p-4 lg:p-6'>
+                  <div className='grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4'>
+                    <div className='text-center p-3 md:p-4 border rounded'>
+                      <div className='text-lg md:text-xl lg:text-2xl font-bold text-blue-600'>
                         {monthlyData.income > 0
                           ? Math.round(
                               ((monthlyData.income - monthlyData.expenses) /
@@ -464,12 +517,12 @@ export default function CashflowManager() {
                           : 0}
                         %
                       </div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className='text-xs md:text-sm text-muted-foreground'>
                         Savings Rate
                       </p>
                     </div>
-                    <div className='text-center p-4 border rounded'>
-                      <div className='text-2xl font-bold text-orange-600'>
+                    <div className='text-center p-3 md:p-4 border rounded'>
+                      <div className='text-lg md:text-xl lg:text-2xl font-bold text-orange-600'>
                         {monthlyData.income > 0
                           ? Math.round(
                               (monthlyData.expenses / monthlyData.income) * 100
@@ -477,15 +530,15 @@ export default function CashflowManager() {
                           : 0}
                         %
                       </div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className='text-xs md:text-sm text-muted-foreground'>
                         Expense Ratio
                       </p>
                     </div>
-                    <div className='text-center p-4 border rounded'>
-                      <div className='text-2xl font-bold text-green-600'>
+                    <div className='text-center p-3 md:p-4 border rounded'>
+                      <div className='text-lg md:text-xl lg:text-2xl font-bold text-green-600'>
                         {monthlyData.transactions.length}
                       </div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className='text-xs md:text-sm text-muted-foreground'>
                         Total Transactions
                       </p>
                     </div>

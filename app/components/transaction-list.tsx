@@ -52,7 +52,7 @@ export default function TransactionList({
       <CardHeader>
         <CardTitle>Semua Transaksi</CardTitle>
 
-        <div className='flex flex-col sm:flex-row gap-4'>
+        <div className='flex flex-col gap-3 md:flex-row md:gap-4'>
           <div className='relative flex-1'>
             <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4' />
             <Input
@@ -64,8 +64,8 @@ export default function TransactionList({
           </div>
 
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className='w-full sm:w-[180px]'>
-              <SelectValue placeholder='Filter berdasarkan tipe' />
+            <SelectTrigger className='w-full md:w-[140px]'>
+              <SelectValue placeholder='Tipe' />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>Semua Tipe</SelectItem>
@@ -75,8 +75,8 @@ export default function TransactionList({
           </Select>
 
           <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className='w-full sm:w-[180px]'>
-              <SelectValue placeholder='Filter berdasarkan kategori' />
+            <SelectTrigger className='w-full md:w-[140px]'>
+              <SelectValue placeholder='Kategori' />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>Semua Kategori</SelectItem>
@@ -100,34 +100,57 @@ export default function TransactionList({
             filteredTransactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className='flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50'
+                className='flex flex-col md:flex-row md:items-center justify-between p-3 md:p-4 border rounded-lg hover:bg-muted/50 gap-3'
               >
                 <div className='flex-1'>
-                  <div className='flex items-center gap-2 mb-1'>
-                    <h3 className='font-medium'>{transaction.description}</h3>
-                    <Badge
-                      variant={
-                        transaction.type === 'income' ? 'default' : 'secondary'
-                      }
-                    >
-                      {transaction.type}
-                    </Badge>
-                    {transaction.isRecurring && (
-                      <Badge variant='outline' className='text-xs'>
-                        🔄 {transaction.recurringFrequency}
+                  <div className='flex flex-col md:flex-row md:items-center gap-2 mb-1'>
+                    <h3 className='font-medium text-sm md:text-base'>
+                      {transaction.description}
+                    </h3>
+                    <div className='flex gap-2'>
+                      <Badge
+                        variant={
+                          transaction.type === 'income'
+                            ? 'default'
+                            : 'secondary'
+                        }
+                        className='text-xs'
+                      >
+                        {transaction.type === 'income'
+                          ? 'Pemasukan'
+                          : 'Pengeluaran'}
                       </Badge>
-                    )}
+                      {transaction.isRecurring && (
+                        <Badge variant='outline' className='text-xs'>
+                          🔄 {transaction.recurringFrequency}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                  <p className='text-sm text-muted-foreground'>
+                  <p className='text-xs md:text-sm text-muted-foreground'>
                     {format(parseISO(transaction.date), 'MMM dd, yyyy')} •{' '}
                     {transaction.category}
                   </p>
+                  {transaction.tags && transaction.tags.length > 0 && (
+                    <div className='flex gap-1 mt-2'>
+                      {transaction.tags.slice(0, 2).map((tag) => (
+                        <Badge key={tag} variant='outline' className='text-xs'>
+                          {tag}
+                        </Badge>
+                      ))}
+                      {transaction.tags.length > 2 && (
+                        <Badge variant='outline' className='text-xs'>
+                          +{transaction.tags.length - 2}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                <div className='flex items-center gap-3'>
-                  <div className='text-right'>
+                <div className='flex items-center justify-between md:justify-end gap-3'>
+                  <div className='text-left md:text-right'>
                     <p
-                      className={`font-semibold ${
+                      className={`font-semibold text-sm md:text-base ${
                         transaction.type === 'income'
                           ? 'text-green-600'
                           : 'text-red-600'
@@ -136,24 +159,6 @@ export default function TransactionList({
                       {transaction.type === 'income' ? '+' : '-'}
                       {formatIDR(transaction.amount)}
                     </p>
-                    {transaction.tags && transaction.tags.length > 0 && (
-                      <div className='flex gap-1 mt-1'>
-                        {transaction.tags.slice(0, 2).map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant='outline'
-                            className='text-xs'
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                        {transaction.tags.length > 2 && (
-                          <Badge variant='outline' className='text-xs'>
-                            +{transaction.tags.length - 2}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   <div className='flex gap-1'>
@@ -161,18 +166,18 @@ export default function TransactionList({
                       variant='ghost'
                       size='icon'
                       onClick={() => onEdit(transaction)}
-                      className='text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+                      className='text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8'
                     >
-                      <Edit2 className='h-4 w-4' />
+                      <Edit2 className='h-3 w-3 md:h-4 md:w-4' />
                     </Button>
 
                     <Button
                       variant='ghost'
                       size='icon'
                       onClick={() => onDelete(transaction.id)}
-                      className='text-red-600 hover:text-red-700 hover:bg-red-50'
+                      className='text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8'
                     >
-                      <Trash2 className='h-4 w-4' />
+                      <Trash2 className='h-3 w-3 md:h-4 md:w-4' />
                     </Button>
                   </div>
                 </div>

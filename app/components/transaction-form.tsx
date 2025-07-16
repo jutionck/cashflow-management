@@ -116,15 +116,15 @@ export default function TransactionForm({
     formData.type === 'income' ? incomeCategories : expenseCategories;
 
   return (
-    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <Card className='w-full max-w-md max-h-[90vh] overflow-y-auto'>
-        <CardHeader>
-          <div className='flex items-center justify-between'>
-            <div>
-              <CardTitle>
+    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50'>
+      <Card className='w-full max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto'>
+        <CardHeader className='pb-4'>
+          <div className='flex items-start justify-between gap-4'>
+            <div className='flex-1 min-w-0'>
+              <CardTitle className='text-lg sm:text-xl'>
                 {editTransaction ? 'Edit Transaksi' : 'Tambah Transaksi'}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className='text-sm'>
                 {editTransaction
                   ? 'Ubah detail transaksi'
                   : 'Masukkan detail transaksi'}
@@ -135,7 +135,7 @@ export default function TransactionForm({
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className='px-4 sm:px-6'>
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div className='space-y-2'>
               <Label htmlFor='date'>Tanggal</Label>

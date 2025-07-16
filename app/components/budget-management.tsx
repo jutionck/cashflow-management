@@ -133,8 +133,8 @@ export default function BudgetManagement({
   const totalRemaining = totalBudget - totalSpent;
 
   return (
-    <div className='space-y-6'>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+    <div className='space-y-4 lg:space-y-6'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
@@ -143,7 +143,7 @@ export default function BudgetManagement({
             <Target className='h-4 w-4 text-blue-600' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold text-blue-600'>
+            <div className='text-lg md:text-xl lg:text-2xl font-bold text-blue-600'>
               {formatIDR(totalBudget)}
             </div>
             <p className='text-xs text-muted-foreground'>
@@ -160,7 +160,7 @@ export default function BudgetManagement({
             <TrendingUp className='h-4 w-4 text-red-600' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold text-red-600'>
+            <div className='text-lg md:text-xl lg:text-2xl font-bold text-red-600'>
               {formatIDR(totalSpent)}
             </div>
             <p className='text-xs text-muted-foreground'>
@@ -184,7 +184,7 @@ export default function BudgetManagement({
           </CardHeader>
           <CardContent>
             <div
-              className={`text-2xl font-bold ${
+              className={`text-lg md:text-xl lg:text-2xl font-bold ${
                 totalRemaining >= 0 ? 'text-green-600' : 'text-red-600'
               }`}
             >
